@@ -1,17 +1,7 @@
 # ignore all vim files
 vim/*
 Amrum/*
+Old_configs/*
 Makefile
 More_recent_simple/*
-smtprc
-muttrc
-offlineimaprc
-tmux.conf
-tmux.confwin
 tmux/*
-vimrc
-vimrcwin
-zsh-update
-zshrc
-zshrcwin
-msmtprc

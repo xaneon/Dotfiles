@@ -1,0 +1,16 @@
+filetype plugin indent on                                                               
+syntax on                                                                               
+set t_Co=256                                                                            
+set t_ut=                                                                               
+let g:solarized_termcolors=256                                                          
+colorscheme morning                                                                     
+let mapleader = ','                                                                     
+imap ii <Esc> 
+au BufNewFile,BufRead *.py                                                              
+    \ set tabstop=4 |                                                                   
+    \ set softtabstop=4 |                                                               
+    \ set shiftwidth=4 |                                                                
+    \ set textwidth=79 |                                                                
+    \ set expandtab |                                                                   
+    \ set autoindent |                                                                  
+syntax on
