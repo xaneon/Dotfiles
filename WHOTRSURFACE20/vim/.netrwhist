@@ -1,0 +1,4 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/mnt/hgfs/WindowsDocuments/ET_Courses/PRFN/20171017/Practise/Kap6_Pakete_und_Anwendungen/kap6_1_5_sockets_tcp'
+let g:netrw_dirhist_2='/home/bc/hadoop-2.7.3'
