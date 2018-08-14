@@ -13,4 +13,3 @@ au BufNewFile,BufRead *.py
     \ set textwidth=79 |                                                                
     \ set expandtab |                                                                   
     \ set autoindent |                                                                  
-syntax on
