@@ -4,7 +4,7 @@ set t_Co=256
 set t_ut=                                                                               
 let g:solarized_termcolors=256                                                          
 colorscheme morning                                                                     
-let mapleader = ','                                                                     
+let mapleader = ',' # map the leader
 imap ii <Esc> 
 au BufNewFile,BufRead *.py                                                              
     \ set tabstop=4 |                                                                   
