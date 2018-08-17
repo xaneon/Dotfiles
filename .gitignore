@@ -5,3 +5,6 @@ Old_configs/*
 Makefile
 More_recent_simple/*
 tmux/*
+WHOTRSURFACE20/jupyter/jupyter_notebook_config.json
+WHOTRSURFACE20/jupyter/mycert.pem
+WHOTRSURFACE20/jupyter/mycert.key
