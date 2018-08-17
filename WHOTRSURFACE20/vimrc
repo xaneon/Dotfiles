@@ -1,15 +1,42 @@
-filetype plugin indent on                                                               
+set nocompatible " required
+filetype off " required
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'
+Plugin 'tmhedberg/SimpylFold'
+" Bundle 'Valloric/YouCompleteMe'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'tpope/vim-fugitive'
+
+call vundle#end()            " required
+filetype plugin indent on " required
 syntax on                                                                               
 set t_Co=256                                                                            
 set t_ut=                                                                               
 let g:solarized_termcolors=256                                                          
 colorscheme morning                                                                     
-let mapleader = ',' # map the leader
+let mapleader = ',' " map the leader
 imap ii <Esc> 
-au BufNewFile,BufRead *.py                                                              
-    \ set tabstop=4 |                                                                   
-    \ set softtabstop=4 |                                                               
-    \ set shiftwidth=4 |                                                                
-    \ set textwidth=79 |                                                                
-    \ set expandtab |                                                                   
-    \ set autoindent |                                                                  
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 | 
+    \ set softtabstop=4 | 
+    \ set shiftwidth=4 | 
+    \ set textwidth=79 | 
+    \ set expandtab | 
+    \ set autoindent | 
+    \ set fileformat=unix | 
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2 | 
+    \ set softtabstop=2 | 
+    \ set shiftwidth=2 | 
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+" nnoremap <space> za
+let g:SimpylFold_docstring_preview=1
+set encoding=utf-8
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let python_highlight_all=1
