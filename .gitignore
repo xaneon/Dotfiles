@@ -8,3 +8,5 @@ tmux/*
 WHOTRSURFACE20/jupyter/jupyter_notebook_config.json
 WHOTRSURFACE20/jupyter/mycert.pem
 WHOTRSURFACE20/jupyter/mykey.key
+WHOTRSURFACE20/jupyter/jupyter_nbconvert_config.json
+WHOTRSURFACE20/jupyter/nbconfig/
