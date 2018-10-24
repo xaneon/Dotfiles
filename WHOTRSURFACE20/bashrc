@@ -154,40 +154,100 @@ PS1='$COLOR_GREEN\W $COLOR_BLUE \u@\h $COLOR_LIGHT_GRAY [$(echo $winnum)/$(echo 
 PS2='\W \u@\h [$(echo $winnum)/$(echo $panenum)] $ '
 
 SPARK_HOME=$HOME/spark-2.3.0-bin-hadoop2.7/
-HADOOP_HOME=$HOME/hadoop-2.7.3/
-
+# HADOOP_HOME=$HOME/hadoop-2.7.6/
+HADOOP_HOME=/usr/local/hadoop
+export HADOOP_INSTALL=/usr/local/hadoop
 export PATH=$SPARK_HOME/bin:$PATH
 export PATH=$HADOOP_HOME/bin:$PATH
 export PATH=/usr/bin:$PATH
-
-export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
-export HADOOP_OPTS="-Djava.library.path=$HADOOP_COMMON_LIB_NATIVE_DIR"
-
-export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
 
 export SPARK_LOCAL_IP=192.168.182.131
 
 # Might need to be changed back for Hadoop
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+# export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 # export JAVA_HOME="/usr/lib/jvm/java-8-oracle/"
 # export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
-export HADOOP_CONF_DIR="$HADOOP_HOME/conf"
+# export HADOOP_CONF_DIR="$HADOOP_HOME/conf"
+export HADOOP_CONF_DIR=$HADOOP_INSTALL/etc/hadoop
 export ZEPPELIN_JAVA_OPTS="-Dhdp.version=2.3.1.0-2574"
+###
+
+
+#HADOOP VARIABLES START
+export YARN_CONF_DIR=$HADOOP_INSTALL/etc/hadoop 
+export PATH=$PATH:$HADOOP_INSTALL/bin
+export PATH=$PATH:$HADOOP_INSTALL/sbin
+# export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_INSTALL/lib"
+export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_INSTALL/lib/native"
+# export HADOOP_OPTS="-Djava.library.path=$HADOOP_COMMON_LIB_NATIVE_DIR"
+# export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"
+export JAVA_LIBRARY_PATH=$HADOOP_INSTALL/lib/native
+# export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$HADOOP_INSTALL/lib/native:$LD_LIBRARY_PATH
+export YARN_EXAMPLES=$HADOOP_INSTALL/share/hadoop/mapreduce
+export HADOOP_MAPRED_STOP_TIMEOUT=30
+export YARN_STOP_TIMEOUT=30
+#HADOOP VARIABLES END
+
+
+################################################
+
+#PIG VARIABLES
+export PIG_HOME=/usr/local/pig
+export PATH=$PATH:$PIG_HOME/bin
+export PIG_CLASSPATH=$PIG_HOME/conf:$HADOOP_INSTALL/etc/hadoop
+#PIG VARIABLES END
+
+#HBASE_VARIABLES
+export HBASE_HOME=/usr/local/hbase
+export PATH=$PATH:$HBASE_HOME/bin
+
+#HIVE_VARIABLES 
+export HIVE_HOME=/usr/local/hive 
+export PATH=$PATH:$HIVE_HOME/bin
+#HIVE_VARIABLES export HIVE_HOME=/usr/local/hive export PATH=$PATH:$HIVE_HOME/bin
+################################################
+
 
 # -- HADOOP ENVIRONMENT VARIABLES START -- #
 # export PATH=$PATH:$HADOOP_HOME/bin
 # export PATH=$PATH:$HADOOP_HOME/sbin
-export HADOOP_MAPRED_HOME=$HADOOP_HOME
-export HADOOP_COMMON_HOME=$HADOOP_HOME
-export HADOOP_HDFS_HOME=$HADOOP_HOME
-export YARN_HOME=$HADOOP_HOME
-export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
-export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"
+# export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_INSTALL
+# export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_INSTALL
+# export HADOOP_HDFS_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_INSTALL
+# export YARN_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_INSTALL
+# export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_INSTALL/lib/native
 # -- HADOOP ENVIRONMENT VARIABLES END -- #
+
+# HIVE
+export HIVE_HOME=/usr/local/apache-hive-1.2.2-bin
+export HIVE_CONF_DIR=/usr/local/apache-hive-1.2.2-bin/conf
+export PATH=$HIVE_HOME/bin:$PATH
+export CLASSPATH=$CLASSPATH:/usr/local/hadoop/lib/*:.
+export CLASSPATH=$CLASSPATH:/usr/local/apache-hive-1.2.1-bin/lib/*:.
+
+# Derby DB for HIVE and Metastore
+export DERBY_HOME=/usr/local/db-derby-10.14.2.0-bin
+export PATH=$PATH:$DERBY_HOME/bin
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar
 
 # Maven
 export M2_HOME=/usr/local/apache-maven/apache-maven-3.5.4
 export MAVEN_OPTS="-Xms256m -Xmx512m" # Very important to put the "m" on the end
+
+# Set PIG_HOME
+
+export PIG_HOME=/home/bc/pig-0.16.0
+export PATH=$PATH:/home/bc/pig-0.16.0/bin
+export PIG_CLASSPATH=$HADOOP_CONF_DIR
+
 
 # Definitions for Hadoop start here
 function snotebook () 
