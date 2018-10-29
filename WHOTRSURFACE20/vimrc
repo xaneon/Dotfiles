@@ -1,7 +1,8 @@
 set nocompatible " required
 filetype off " required
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+set rtp+=$HOME/.vim/bundle/Vundle.vim
+" call vundle#begin()
+call vundle#rc('$HOME/.vim/bundle')
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tmhedberg/SimpylFold'
