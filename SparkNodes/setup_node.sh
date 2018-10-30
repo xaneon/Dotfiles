@@ -135,7 +135,9 @@ sudo sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/
 
 sudo service ssh restart && sudo service sshd restart
 
-mv ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+if [ -f ~/.ssh/id_rsa.pub ]; then
+	mv ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+fi
 
 chmod 600 ~/.ssh/authorized_keys
 
