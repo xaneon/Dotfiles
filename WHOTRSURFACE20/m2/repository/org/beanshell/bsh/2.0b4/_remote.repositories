@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Jan 30 10:44:27 CET 2019
+bsh-2.0b4.jar>opendaylight-mirror=
+bsh-2.0b4.pom>opendaylight-mirror=
