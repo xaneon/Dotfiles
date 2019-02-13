@@ -1,9 +1,28 @@
 snippet np "numpy" b
 import numpy as np
+$1
+endsnippet
+
+snippet etree "import elementtree" b
+from lxml import etree as ET
+$1
 endsnippet
 
 snippet pd "pandas" b
 import pandas as pd
+$1
+endsnippet
+
+snippet ptype "print and type" b
+print(type(${1:CONTENT})
+$2
+endsnippet
+
+snippet wopen "with open" b
+with open(${1:FNAME}, "${2:r}") as fid:
+    fid.${3:FUNCTIONNAME}($4)
+    $5
+$6
 endsnippet
 
 snippet def "function def" b
