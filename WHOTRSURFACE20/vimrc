@@ -5,16 +5,16 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tmhedberg/SimpylFold'
+Bundle 'ervandew/supertab'
 " Bundle 'Valloric/YouCompleteMe'
+Bundle 'SirVer/ultisnips'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'mattn/emmet-vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'tpope/vim-fugitive'
 Plugin 'rykka/riv.vim'
-Plugin 'honza/vim-snippets'
+" Plugin 'honza/vim-snippets'
 
-" assuming you want to use snipmate snippet engine
-" ActivateAddons vim-snippets snipmate
 
 call vundle#end()            " required
 filetype plugin indent on " required
@@ -43,7 +43,16 @@ set foldlevel=99
 " nnoremap <space> za
 let g:SimpylFold_docstring_preview=1
 set encoding=utf-8
-let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+" make YCM compatible with UltiSnips (using supertab)
+" let g:SuperTabDefaultCompletionType = '<C-n>'
+" let g:ycm_key_list_select_completion=[]
+" let g:ycm_key_list_previous_completion=[]
+"
+" " better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
 let g:user_emmet_leader_key=','
 let python_highlight_all=1
