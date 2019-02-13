@@ -11,6 +11,10 @@ Plugin 'mattn/emmet-vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'tpope/vim-fugitive'
 Plugin 'rykka/riv.vim'
+Plugin 'honza/vim-snippets'
+
+" assuming you want to use snipmate snippet engine
+" ActivateAddons vim-snippets snipmate
 
 call vundle#end()            " required
 filetype plugin indent on " required
@@ -41,4 +45,5 @@ let g:SimpylFold_docstring_preview=1
 set encoding=utf-8
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:user_emmet_leader_key=','
 let python_highlight_all=1
