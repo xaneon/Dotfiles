@@ -1,0 +1,25 @@
+snippet np "numpy" b
+import numpy as np
+endsnippet
+
+snippet pd "pandas" b
+import pandas as pd
+endsnippet
+
+snippet def "function def" b
+def ${1:name}(${2:argumentname}=${3:argumentvalue}):
+    """
+    **Summary** of $1.
+
+    Parameters
+    ----------
+    $2: ${4:datatype}
+        Description of ``$2``.
+    """
+    ${5:${VISUAL}} 
+endsnippet
+
+snippet #! "shebang" b
+#!/usr/bin/python3.6
+$1
+endsnippet
