@@ -1,0 +1,2028 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=2 tabstop=2: -->
+<!--
+ Copyright (c) 2013 Cisco Systems, Inc. and others.  All rights reserved.
+
+ This program and the accompanying materials are made available under the
+ terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ and is available at http://www.eclipse.org/legal/epl-v10.html
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.opendaylight.odlparent</groupId>
+    <artifactId>odlparent-lite</artifactId>
+    <version>3.1.5</version>
+    <relativePath>../odlparent-lite</relativePath>
+  </parent>
+
+  <artifactId>odlparent</artifactId>
+  <packaging>pom</packaging>
+  <name>ODL :: odlparent :: ${project.artifactId}</name>
+
+  <scm>
+    <connection>scm:git:ssh://git.opendaylight.org:29418/odlparent.git</connection>
+    <developerConnection>scm:git:ssh://git.opendaylight.org:29418/odlparent.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://wiki.opendaylight.org/view/ODL_Root_Parent:Main</url>
+  </scm>
+
+  <!-- Variables should only be used where genuinely useful (to avoid
+       repetition); in general versions should be specified in the
+       corresponding dependencyManagement or pluginManagement element, not as
+       a variable. Duplication within odlparent doesn't count if it can be
+       managed using maven-versions-plugin. -->
+  <properties>
+    <nexus.repository.release>opendaylight.release</nexus.repository.release>
+    <nexus.repository.snapshot>opendaylight.snapshot</nexus.repository.snapshot>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- Java Versions -->
+    <!-- FIXME: confirm these two are picked by maven-compiler-plugin -->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <java.version.source>${maven.compiler.source}</java.version.source>
+    <java.version.target>${maven.compiler.target}</java.version.target>
+
+    <!-- Maven plugin versions, in the 'canonical' format -->
+    <!-- Used in controller, didm, neutron, openflowplugin, persistence; see also affinity -->
+    <maven.bundle.version>3.3.0</maven.bundle.version>
+    <!-- Used in sxp -->
+    <maven.clean.plugin.version>2.6.1</maven.clean.plugin.version>
+    <!-- Used in controller, didm, l2switch, lacp, persistence; see also toolkit, tsdr, ttp -->
+    <maven.compile.plugin.version>3.7.0</maven.compile.plugin.version>
+    <!-- Used in controller, coretutorials, mdsal, snbi, yangtools -->
+    <maven.javadoc.version>3.0.1</maven.javadoc.version>
+    <!-- Used in snmp -->
+    <maven.plugin.version>3.5</maven.plugin.version>
+    <!-- Used in neutron, of-config, tsdr, yangtools -->
+    <!-- Later versions break tests in downstream projects -->
+    <maven.surefire.version>2.18.1</maven.surefire.version>
+
+    <!-- Maven plugin versions, in random formats -->
+    <!-- Used in aaa, alto, controller, didm, tsdr; see also affinity, snmp4sdn, toolkit, ttp -->
+    <bundle.plugin.version>${maven.bundle.version}</bundle.plugin.version>
+    <!-- TODO rename checkstyle.version to checkstyle.(maven.)plugin.version,
+         or just remove it, incl. all usages of it in a number of pom.xml; because normally,
+         as maven-checkstyle-plugin is in pluginManagement, this should not have to be repeated. -->
+    <!-- Used in alto, controller, lacp, netide, openflowjava, packetcable, snmp4sdn, ttp; see also affinity, opendove,
+         toolkit -->
+    <checkstyle.version>2.17</checkstyle.version>
+    <!-- Used in controller, packetcable -->
+    <odl.checkstyle.version>3.1.5</odl.checkstyle.version>
+    <!-- Used in snmp4sdn; see also toolkit -->
+    <compiler.version>${maven.compile.plugin.version}</compiler.version>
+    <!-- Used in controller, l2switch, netide, openflowjava, openflowplugin, snbi, tsdr, ttp; see also toolkit -->
+    <enforcer.version>3.0.0-M1</enforcer.version>
+    <!-- Used in affinity, controller, nemo, opendove, snmp4sdn -->
+    <enunciate.version>1.31</enunciate.version>
+    <!-- Used in affinity, coretutorials, netide -->
+    <exam.version>4.11.0</exam.version>
+    <!-- Used in affinity, controller, neutron, of-config; see also snmp4sdn -->
+    <failsafe.version>2.20.1</failsafe.version>
+    <!-- Used in controller, netvirt, neutron, of-config, ovsdb, persistence, snmp4sdn, vtn; see also usc -->
+    <jacoco.version>0.8.1</jacoco.version>
+    <!-- Used in aaa, controller, coretutorials, integration/distribution, l2switch, lacp, lispflowmapping, netide,
+         nic, openflowplugin, ovsdb, persistence, sfc, snbi, snmp4sdn?, sxp, topoprocessing, unimgr, vtn -->
+    <karaf.version>4.1.7</karaf.version>
+    <karaf.plugin.version>4.1.7</karaf.plugin.version>
+    <!-- Used in lispflowmapping, snmp4sdn, vtn -->
+    <projectinfo>2.8.1</projectinfo>
+    <!-- Used in of-config; see also snmp4sdn -->
+    <propertymavenplugin.version>1.0.0</propertymavenplugin.version>
+    <!-- Used in topoprocessing; see also defense4all, snmp4sdn, toolkit -->
+    <releaseplugin.version>2.5.3</releaseplugin.version>
+
+    <!-- Supporting Libraries -->
+    <!-- Only used internally -->
+    <bouncycastle.version>1.60</bouncycastle.version>
+
+    <!-- Used by controller, snbi; see also centinel, dlux, toolkit -->
+    <osgi.core.version>5.0.0</osgi.core.version>
+
+    <akka.version>2.5.11</akka.version>
+    <leveldb.version>0.7</leveldb.version>
+
+    <!-- Default Sonar configuration -->
+    <sonar-jacoco-listeners.version>3.8</sonar-jacoco-listeners.version>
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.jacoco.reportPath>${project.build.directory}/code-coverage/jacoco.exec</sonar.jacoco.reportPath>
+    <sonar.jacoco.itReportPath>${project.build.directory}/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
+    <!-- Note: This list should match jacoco-maven-plugin's exclusion list below -->
+    <sonar.exclusions>**/gen/**,**/generated-sources/**,**/generated-test-sources/**,**/yang-gen/**,**/yang-gen-config/**,**/yang-gen-sal/**,**/yang-gen-code/**,**/pax/**</sonar.exclusions>
+
+    <!-- Opt-in code quality checks -->
+    <pmd.cpd.fail>false</pmd.cpd.fail>                  <!-- Copy/paste detection -->
+    <duplicate-finder.skip>true</duplicate-finder.skip> <!-- Classpath duplicates -->
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>org.opendaylight.odlparent</groupId>
+        <artifactId>odlparent-artifacts</artifactId>
+        <version>3.1.5</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <!-- Build tool dependencies (normally not here in <dependencies>,
+           but in a <dependency> in <pluginManagement> but for Checkstyle this
+           is required so that we can share the same version of Checkstyle
+           for both the Maven plugin below as well as  for custom Checkstyle
+           check rule projects, such as yangtools' checkstyle-logging) -->
+      <dependency>
+        <groupId>com.puppycrawl.tools</groupId>
+        <artifactId>checkstyle</artifactId>
+        <!-- This should match the plugin management on maven-checkstyle-plugin below -->
+        <version>8.4</version>
+      </dependency>
+
+      <!-- Testing Dependencies -->
+      <!-- JUnit, Hamcrest, Mockito and PowerMock need to be kept in sync -->
+      <!-- Need to stick to JUnit 4.11 until
+           https://github.com/jayway/powermock/issues/560 is fixed (either in
+           PowerMock or with a new JUnit release) -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit-dep</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.skyscreamer</groupId>
+         <artifactId>jsonassert</artifactId>
+         <version>1.5.0</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.10.19</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-core</artifactId>
+        <version>1.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-library</artifactId>
+        <version>1.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.truth</groupId>
+        <artifactId>truth</artifactId>
+        <version>0.40</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.truth.extensions</groupId>
+        <artifactId>truth-java8-extension</artifactId>
+        <version>0.40</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>3.0.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility-proxy</artifactId>
+        <version>3.0.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-mockito</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-support</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-core</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-reflect</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!--
+           Annotation Processors
+       -->
+      <dependency>
+        <!-- Generates immutable implementations, builders, the works -->
+        <groupId>org.immutables</groupId>
+        <artifactId>value</artifactId>
+        <version>2.5.6</version>
+        <!-- Must be provided; scope=test here breaks APT in Eclipse :( -->
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <!-- Generates META-INF/services entries for ServiceLoader -->
+        <groupId>org.kohsuke.metainf-services</groupId>
+        <artifactId>metainf-services</artifactId>
+        <version>1.7</version>
+        <optional>true</optional>
+        <scope>provided</scope>
+      </dependency>
+
+      <!--
+           Supporting Libraries
+       -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>1.7.25</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.25</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.7.25</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>log4j-over-slf4j</artifactId>
+        <version>1.7.25</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.25</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>23.6.1-jre</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.code.findbugs</groupId>
+            <!-- Use com.google.code.findbugs:annotations instead of jsr305 -->
+            <artifactId>jsr305</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava-testlib</artifactId>
+        <version>23.6.1-jre</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.code.findbugs</groupId>
+            <!-- Use com.google.code.findbugs:annotations instead of jsr305 -->
+            <artifactId>jsr305</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.mycila.guice.extensions</groupId>
+        <artifactId>mycila-guice-jsr250</artifactId>
+        <!-- Make sure this version is in sync with the guice one below -->
+        <version>4.0.rc1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <!-- Make sure this version is in sync with the one used by mycila-guice-jsr250 above
+             by checking it here: https://github.com/mycila/guice/blob/master/pom.xml#L103 -->
+        <version>4.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-text</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.11</version>
+      </dependency>
+      <!-- Jersey for JAXRS -->
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs-api</artifactId>
+        <version>2.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.bundles.repackaged</groupId>
+        <artifactId>jersey-guava</artifactId>
+        <version>2.22.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.json</artifactId>
+        <version>1.0.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.eclipsesource.jaxrs</groupId>
+        <artifactId>jersey-all</artifactId>
+        <version>2.22.2</version>
+      </dependency>
+
+      <!-- servlet 3.x support -->
+      <dependency>
+        <groupId>org.glassfish.jersey.containers</groupId>
+        <artifactId>jersey-container-servlet</artifactId>
+        <version>2.8</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.bundles</groupId>
+        <artifactId>json</artifactId>
+        <version>20090211_1</version>
+      </dependency>
+      <!-- FIXME : remove all dependencies for jersey 1.17 -->
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-core</artifactId>
+        <version>1.19.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-json</artifactId>
+        <version>1.19.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-server</artifactId>
+        <version>1.19.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-servlet</artifactId>
+        <version>1.19.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey.jersey-test-framework</groupId>
+        <artifactId>jersey-test-framework-grizzly2</artifactId>
+        <version>1.19.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey.jersey-test-framework</groupId>
+        <artifactId>jersey-test-framework-inmemory</artifactId>
+        <version>1.19.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-client</artifactId>
+        <version>1.19.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.opendaylight.controller.thirdparty</groupId>
+        <artifactId>com.sun.jersey.jersey-servlet</artifactId>
+        <version>1.17</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-core</artifactId>
+        <version>1.3.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-web</artifactId>
+        <version>1.3.2</version>
+      </dependency>
+
+      <!-- Plugin integration -->
+      <dependency>
+        <groupId>net.java.dev.stax-utils</groupId>
+        <artifactId>stax-utils</artifactId>
+        <version>20070216</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.plexus</groupId>
+        <artifactId>plexus-build-api</artifactId>
+        <version>0.0.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-slf4j-logging</artifactId>
+        <version>1.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>stax2-api</artifactId>
+        <!-- Needs to match jackson's idea of import -->
+        <version>3.1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>2.8.11.20180608</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <!-- TODO do we really need resteasy ? -->
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>jaxrs-api</artifactId>
+        <version>3.0.12.Final</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>annotations</artifactId>
+        <version>3.0.0</version>
+        <exclusions>
+          <!-- We'd like (have) to eventually exclude :jsr305 here as well, because
+               the types of this artifact are already shaded inside the :annotations artifact.
+               This state is a temporary solution to allow all projects to gradually switch over
+               switch their <dependency><groupId>com.google.code.findbugs from
+               <artifactId>jsr305 to <artifactId>annotations in all pom.xml.
+               The target solution is https://git.opendaylight.org/gerrit/#/c/47337/
+            -->
+          <exclusion>
+            <groupId>net.jcip</groupId>
+            <!-- The types of this artifact are already shaded inside the :annotations artifact -->
+            <artifactId>jcip-annotations</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jdt</groupId>
+        <artifactId>org.eclipse.jdt.annotation</artifactId>
+        <version>2.1.150</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.5</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>1.3.3</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-net</groupId>
+        <artifactId>commons-net</artifactId>
+        <version>3.6</version>
+      </dependency>
+
+      <!-- Netty -->
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <!-- If these are updated, the version in features.xml needs to be changed too -->
+        <version>4.1.31.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-buffer</artifactId>
+        <version>4.1.31.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec</artifactId>
+        <version>4.1.31.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec-http</artifactId>
+        <version>4.1.31.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-common</artifactId>
+        <version>4.1.31.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler</artifactId>
+        <version>4.1.31.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport</artifactId>
+        <version>4.1.31.Final</version>
+      </dependency>
+      <!-- Here we need to define all available native epoll implementations; we can't limit ourselves to the build
+      platform and we can't require the build platform to have an implementation (e.g. OS X) -->
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-native-epoll</artifactId>
+        <classifier>linux-x86_64</classifier>
+        <version>4.1.31.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>jsr311-api</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.dependencymanager</artifactId>
+        <version>4.4.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.dependencymanager.shell</artifactId>
+        <version>4.0.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.metatype</artifactId>
+        <version>1.1.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk15on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk15on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-ext-jdk15on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.enunciate</groupId>
+        <artifactId>enunciate-core-annotations</artifactId>
+        <version>${enunciate.version}</version>
+        <exclusions>
+          <exclusion>
+            <!-- JSR 250 API has 6 very old versions of javax.annotation @PreDestroy & Co.
+                 which are in core rt.jar since Java 6; it also has Java EE @DataSourceDefinition
+                 and @RunAs and @PermitAll & Co. which we do not require
+                 (or at least not from jsr250-api via enunciate) -->
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.webcohesion.enunciate</groupId>
+        <artifactId>enunciate-core-annotations</artifactId>
+        <version>2.10.1</version>
+        <exclusions>
+          <exclusion>
+            <!-- see above -->
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.jettison</groupId>
+        <artifactId>jettison</artifactId>
+        <version>1.3.8</version>
+      </dependency>
+      <!-- To upgrade org.eclipse.persistence dependencies to 2.6.0+, we need to ensure all downstreams consumers
+         pull in javax.validation first:
+         http://stackoverflow.com/questions/28568154/how-to-get-eclipselink-2-6-0-m3-working-with-jersey-1-18-3 -->
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>org.eclipse.persistence.antlr</artifactId>
+        <version>2.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>org.eclipse.persistence.core</artifactId>
+        <version>2.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>org.eclipse.persistence.moxy</artifactId>
+        <version>2.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>1.1.0.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.24.0-GA</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.spec.javax.transaction</groupId>
+        <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+        <version>1.0.1.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jolokia</groupId>
+        <artifactId>jolokia-osgi</artifactId>
+        <version>1.5.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20131018</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <version>${osgi.core.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>${osgi.core.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <!-- for https://bugs.opendaylight.org/show_bug.cgi?id=4290 -->
+        <artifactId>org.osgi.service.event</artifactId>
+        <version>1.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.aries.quiesce</groupId>
+        <artifactId>org.apache.aries.quiesce.api</artifactId>
+        <version>1.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-all</artifactId>
+        <version>5.1</version>
+      </dependency>
+
+      <!-- Configuration library -->
+      <!-- This needs to be kept in sync with the version used by akka -->
+      <dependency>
+        <groupId>com.typesafe</groupId>
+        <artifactId>config</artifactId>
+        <version>1.3.2</version>
+      </dependency>
+
+      <!-- Reactive Streams, used by Akka -->
+      <dependency>
+        <groupId>org.reactivestreams</groupId>
+        <artifactId>reactive-streams</artifactId>
+        <version>1.0.1</version>
+      </dependency>
+
+      <!-- Akka -->
+      <dependency>
+        <groupId>com.typesafe</groupId>
+        <artifactId>ssl-config-core_2.12</artifactId>
+        <version>0.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-actor_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-cluster_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-osgi_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-persistence_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-persistence-tck_2.12</artifactId>
+        <version>${akka.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-protobuf_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-remote_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-slf4j_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-stream_2.12</artifactId>
+        <version>${akka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe.akka</groupId>
+        <artifactId>akka-testkit_2.12</artifactId>
+        <version>${akka.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.scala-lang.modules</groupId>
+        <artifactId>scala-java8-compat_2.12</artifactId>
+        <version>0.8.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.scala-lang.modules</groupId>
+        <artifactId>scala-parser-combinators_2.12</artifactId>
+        <version>1.0.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.iq80.leveldb</groupId>
+        <artifactId>leveldb</artifactId>
+        <version>${leveldb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.fusesource.leveldbjni</groupId>
+        <artifactId>leveldbjni-all</artifactId>
+        <version>1.8-odl</version>
+      </dependency>
+      <dependency>
+        <groupId>org.uncommons.maths</groupId>
+        <artifactId>uncommons-maths</artifactId>
+        <version>1.2.2a</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>2.5.0</version>
+      </dependency>
+
+      <!-- Aeron, required by Akka -->
+      <dependency>
+        <groupId>org.agrona</groupId>
+        <artifactId>agrona</artifactId>
+        <version>0.9.12</version>
+      </dependency>
+      <dependency>
+        <groupId>io.aeron</groupId>
+        <artifactId>aeron-client</artifactId>
+        <version>1.7.0</version>
+      </dependency>
+      <dependency>
+        <groupId>io.aeron</groupId>
+        <artifactId>aeron-driver</artifactId>
+        <version>1.7.0</version>
+      </dependency>
+
+      <!-- Scala -->
+      <dependency>
+        <groupId>org.scala-lang</groupId>
+        <artifactId>scala-library</artifactId>
+        <version>2.12.8</version>
+      </dependency>
+      <dependency>
+        <groupId>org.scala-lang</groupId>
+        <artifactId>scala-reflect</artifactId>
+        <version>2.12.8</version>
+      </dependency>
+
+      <!-- LMAX Disruptor -->
+      <dependency>
+        <groupId>com.lmax</groupId>
+        <artifactId>disruptor</artifactId>
+        <version>3.3.10</version>
+      </dependency>
+
+      <!-- Add Pax Exam -->
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-container-forked</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-container-karaf</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-container-native</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-extender-service</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-inject</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-invoker-junit</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-features</artifactId>
+        <version>${exam.version}</version>
+        <type>xml</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-junit4</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-link-mvn</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.exam</groupId>
+        <artifactId>pax-exam-link-assembly</artifactId>
+        <version>${exam.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ops4j.pax.url</groupId>
+        <artifactId>pax-url-link</artifactId>
+        <version>2.5.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.url</groupId>
+        <artifactId>pax-url-aether</artifactId>
+        <version>2.5.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.url</groupId>
+        <artifactId>pax-url-wrap</artifactId>
+        <version>2.5.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.osgi</groupId>
+        <artifactId>spring-osgi-mock</artifactId>
+        <version>1.2.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>xmlunit</groupId>
+        <artifactId>xmlunit</artifactId>
+        <version>1.6</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-client</artifactId>
+        <version>9.3.24.v20180605</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>9.3.24.v20180605</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlets</artifactId>
+        <version>9.3.24.v20180605</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-webapp</artifactId>
+        <version>9.3.24.v20180605</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.4.196</version>
+      </dependency>
+
+      <!-- Xtend http://xtend-lang.org
+           NOTE: When you increase the version here,
+           then remember to also increase it for the
+           xtend-maven-plugin below! (We don't want to
+           use a Maven property, in order not to "leak" that.)
+       -->
+      <dependency>
+          <groupId>org.eclipse.xtend</groupId>
+          <artifactId>org.eclipse.xtend.lib</artifactId>
+          <version>2.16.0</version>
+      </dependency>
+      <dependency>
+          <groupId>org.eclipse.xtend</groupId>
+          <artifactId>org.eclipse.xtend.lib.macro</artifactId>
+          <version>2.16.0</version>
+      </dependency>
+      <dependency>
+          <groupId>org.eclipse.xtext</groupId>
+          <artifactId>org.eclipse.xtext.xbase.lib</artifactId>
+          <version>2.16.0</version>
+      </dependency>
+
+      <!-- Annotations -->
+      <dependency>
+        <groupId>javax.inject</groupId>
+        <artifactId>javax.inject</artifactId>
+        <version>1</version>
+        <optional>true</optional>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.cdi</groupId>
+        <artifactId>pax-cdi-api</artifactId>
+        <version>1.0.0.RC2</version>
+        <optional>true</optional>
+      </dependency>
+
+      <!-- Cassandra -->
+      <dependency>
+        <groupId>com.datastax.cassandra</groupId>
+        <artifactId>cassandra-driver-core</artifactId>
+        <version>2.1.9</version>
+      </dependency>
+
+      <!-- jung, a graph library -->
+      <dependency>
+        <groupId>net.sf.jung</groupId>
+        <artifactId>jung-api</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.jung</groupId>
+        <artifactId>jung-algorithms</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.jung</groupId>
+        <artifactId>jung-graph-impl</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+
+      <!-- Karaf console support -->
+      <dependency>
+        <groupId>org.apache.karaf.shell</groupId>
+        <artifactId>org.apache.karaf.shell.core</artifactId>
+        <version>${karaf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.karaf.shell</groupId>
+        <artifactId>org.apache.karaf.shell.console</artifactId>
+        <version>${karaf.version}</version>
+      </dependency>
+
+      <!-- ThreeTen-Extra, date/time complements -->
+      <dependency>
+        <groupId>org.threeten</groupId>
+        <artifactId>threeten-extra</artifactId>
+        <version>1.3.2</version>
+      </dependency>
+
+      <!-- When updating this version, consider antl4-maven-plugin below -->
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-runtime</artifactId>
+        <version>4.7.1</version>
+      </dependency>
+      <!-- Aries' Blueprint version should be kept in sync to the version actually
+           used by our ${karaf[4].version} ... please bump this when increasing that.
+           TODO Find a smarter way to inherit this from a (TBD..) Karaf artifacts BOM! -->
+      <dependency>
+        <groupId>org.apache.aries.blueprint</groupId>
+        <artifactId>org.apache.aries.blueprint.core</artifactId>
+        <version>1.7.1</version>
+      </dependency>
+
+      <!-- Apache SSHD with netty -->
+      <dependency>
+        <groupId>org.apache.sshd</groupId>
+        <artifactId>sshd-core</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.sshd</groupId>
+        <artifactId>sshd-netty</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>net.i2p.crypto</groupId>
+        <artifactId>eddsa</artifactId>
+        <version>0.3.0</version>
+      </dependency>
+
+      <!-- JAXB for Java 11+ -->
+      <!-- FIXME: bump this to 2.3.0 once we require Java 9+
+           FIXME: bump this to whatever karaf provides once we require Java 11+
+      -->
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.2.8</version>
+        <exclusions>
+          <exclusion>
+            <!-- Provided by JRE -->
+            <groupId>javax.xml.stream</groupId>
+            <artifactId>stax-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- Karaf provides SL4FJ encapsulation -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Enable useful code quality annotations everywhere -->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>annotations</artifactId>
+      <scope>provided</scope>
+      <!-- Contains retention=RUNTIME annotations, which are not really needed -->
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.annotation</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Official maven plugins, alpha-sorted by artifactId.
+             We do not need to specify the groupId. -->
+        <plugin>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${checkstyle.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <!-- This should match the dependency management on com.puppycrawl.tools:checkstyle above -->
+              <version>8.4</version>
+            </dependency>
+            <dependency>
+              <groupId>org.opendaylight.odlparent</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>3.1.5</version>
+            </dependency>
+            <dependency>
+              <groupId>org.opendaylight.odlparent</groupId>
+              <artifactId>odl-license</artifactId>
+              <version>3.1.5</version>
+            </dependency>
+            <dependency>
+              <groupId>com.github.sevntu-checkstyle</groupId>
+              <artifactId>sevntu-checkstyle-maven-plugin</artifactId>
+              <version>1.29.0</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <configLocation>odl_checks.xml</configLocation>
+            <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+            <!-- <sourceDirectory> is needed so that checkstyle ignores the
+                 generated sources directory -->
+            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+            <includeResources>true</includeResources>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+            <includeTestResources>true</includeTestResources>
+            <includes>**\/*.java, **\/*.xtend</includes>
+            <excludes>
+              org/opendaylight/yang/gen/**,
+              **/protobuff/messages/**,
+              **/thrift/gen/*.java
+            </excludes>
+            <failsOnError>false</failsOnError>
+            <consoleOutput>true</consoleOutput>
+          </configuration>
+          <executions>
+            <execution>
+              <id>check-license</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>process-sources</phase>
+              <configuration>
+                <configLocation>check-license.xml</configLocation>
+                <headerLocation>EPL-LICENSE.regexp.txt</headerLocation>
+                <includeResources>false</includeResources>
+                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                <includeTestResources>false</includeTestResources>
+                <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                <excludes>
+                  org/opendaylight/yang/gen/**,
+                  **/protobuff/messages/**,
+                  **/thrift/gen/*.java
+                </excludes>
+                <failsOnError>false</failsOnError>
+                <consoleOutput>true</consoleOutput>
+              </configuration>
+            </execution>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>process-sources</phase>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.8</version>
+          <executions>
+            <execution>
+              <id>cpd</id>
+              <phase>process-sources</phase>
+              <goals>
+                <goal>cpd-check</goal>
+              </goals>
+              <configuration>
+                <failOnViolation>${pmd.cpd.fail}</failOnViolation>
+                <!-- 100 "tokens" here correspond to approx. 5-10 lines of code -->
+                <minimumTokens>101</minimumTokens>
+                <printFailingErrors>true</printFailingErrors>
+                <excludeRoots>
+                  <!-- FIXME: this should be a wildcard, but PMD is brain-damaged and does
+                              not understand path prefixes nor wildcards. Details are available
+                              at http://stackoverflow.com/questions/15647771/pmd-exclude-not-working
+                              Hence people introducing new generated sources have to include
+                              PMD config too.
+                   -->
+                  <excludeRoot>${project.build.directory}/generated-sources</excludeRoot>
+                  <excludeRoot>${project.build.directory}/generated-test-sources</excludeRoot>
+                </excludeRoots>
+                <linkXRef>false</linkXRef>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compile.plugin.version}</version>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+            <showWarnings>true</showWarnings>
+            <compilerArgs>
+              <arg>-parameters</arg>
+              <arg>-Xlint:deprecation</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${enforcer.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${failsafe.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-invoker-plugin</artifactId>
+          <version>2.0.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>unpack-license</id>
+              <phase>generate-resources</phase>
+              <goals><goal>unpack</goal></goals>
+              <configuration>
+                <artifactItems>
+                  <artifactItem>
+                    <groupId>org.opendaylight.odlparent</groupId>
+                    <artifactId>odl-license</artifactId>
+                    <version>3.1.5</version>
+                  </artifactItem>
+                </artifactItems>
+                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                <excludes>META-INF/**</excludes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>${maven.plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-remote-resources-plugin</artifactId>
+          <version>1.6.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.0.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.version}</version>
+          <configuration>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+            <trimStackTrace>false</trimStackTrace>
+          </configuration>
+        </plugin>
+
+        <!-- Third-party plugins, grouped by groupId, alpha-sorted by artifactId -->
+        <plugin>
+          <!-- Support Blueprint XML construction using annotations -->
+          <groupId>org.apache.aries.blueprint</groupId>
+          <artifactId>blueprint-maven-plugin</artifactId>
+          <version>1.4.0</version>
+          <configuration>
+            <scanPaths>
+              <scanPath>org.opendaylight</scanPath>
+            </scanPaths>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <!-- See https://issues.apache.org/jira/browse/ARIES-1596 -->
+              <!-- This shouldn't be necessary with plugin version 1.5.0 -->
+              <groupId>org.apache.xbean</groupId>
+              <artifactId>xbean-finder-shaded</artifactId>
+              <version>4.5</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <goals>
+                <goal>blueprint-generate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>${maven.bundle.version}</version>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <!-- Note the '-' for git.properties.. this is required because git-commit-id-plugin has <failOnNoGitDirectory>false,
+                   so that the build doesn't fail if there is no .../.git/ - so git.properties is effectively optional;
+                   and so the '-' there is needed to make the maven-bundle-plugin if that resource is not present.  -->
+              <Include-Resource>{maven-resources},${project.build.directory}/classes/LICENSE,META-INF/git.properties=-${project.build.directory}/classes/META-INF/git.properties</Include-Resource>
+            </instructions>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.karaf.tooling</groupId>
+          <artifactId>karaf-maven-plugin</artifactId>
+          <version>${karaf.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.servicemix.tooling</groupId>
+          <artifactId>depends-maven-plugin</artifactId>
+          <version>1.4.0</version>
+          <executions>
+            <execution>
+              <id>generate-depends-file</id>
+              <goals>
+                <goal>generate-depends-file</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.enunciate</groupId>
+          <artifactId>maven-enunciate-plugin</artifactId>
+          <version>${enunciate.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.groovy.maven</groupId>
+          <artifactId>gmaven-plugin</artifactId>
+          <version>1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.12</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>3.0.5</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.opendaylight.odlparent</groupId>
+              <artifactId>findbugs</artifactId>
+              <version>3.1.5</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <!--
+              Enables analysis which takes more memory but finds more bugs.
+              If you run out of memory, changes the value of the effort element
+              to 'Low'.
+            -->
+            <effort>Max</effort>
+            <!-- Reports all bugs (other values are medium and max) -->
+            <threshold>Low</threshold>
+            <!-- Build doesn't fail if problems are found -->
+            <failOnError>false</failOnError>
+            <!-- References the excluded rules -->
+            <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+            <!-- Produces XML report -->
+            <xmlOutput>true</xmlOutput>
+            <!-- Configures the directory in which the XML report is created -->
+            <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+            </configuration>
+            <executions>
+              <!--
+                Ensures that FindBugs inspects source code when project is compiled.
+              -->
+              <execution>
+                <id>analyze-compile</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+        </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>3.1.0-RC6</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.github.spotbugs</groupId>
+              <artifactId>spotbugs</artifactId>
+              <version>3.1.0</version>
+            </dependency>
+            <dependency>
+              <groupId>org.opendaylight.odlparent</groupId>
+              <artifactId>findbugs</artifactId>
+              <version>3.1.5</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <!--
+              Enables analysis which takes more memory but finds more bugs.
+              If you run out of memory, changes the value of the effort element
+              to 'Low'.
+            -->
+            <effort>Max</effort>
+            <!-- Reports all bugs (other values are medium and max) -->
+            <threshold>Low</threshold>
+            <!-- Build doesn't fail if problems are found -->
+            <failOnError>false</failOnError>
+            <!-- References the excluded rules -->
+            <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+            <!-- Produces XML report -->
+            <xmlOutput>true</xmlOutput>
+            <!-- Configures the directory in which the XML report is created -->
+            <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+          </configuration>
+          <executions>
+            <!--
+              Ensures that SpotBugs inspects source code when project is compiled.
+            -->
+            <execution>
+              <id>analyze-compile</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>${propertymavenplugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.xtend</groupId>
+          <artifactId>xtend-maven-plugin</artifactId>
+          <!-- NOTE: This version MUST be kept in sync with the Xtend version in <dependencyManagement> -->
+          <version>2.16.0</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>compile</goal>
+                <goal>testCompile</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.build.directory}/generated-sources/xtend</outputDirectory>
+                <testOutputDirectory>${project.build.directory}/generated-test-sources/xtend</testOutputDirectory>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <versionRange>[1.0,)</versionRange>
+                    <goals>
+                      <goal>manifest</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute/>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>enforce</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>[2.10,)</versionRange>
+                    <goals>
+                      <goal>unpack</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <versionRange>[3.6,)</versionRange>
+                    <goals>
+                      <goal>cpd-check</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+                <!-- The plugin will eventually be removed, remove this too at that point -->
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <versionRange>[1.8,)</versionRange>
+                    <goals>
+                      <goal>run</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.servicemix.tooling</groupId>
+                    <artifactId>depends-maven-plugin</artifactId>
+                    <versionRange>[1.2,)</versionRange>
+                    <goals>
+                      <goal>generate-depends-file</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute/>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <versionRange>[0.7.0,)</versionRange>
+                    <goals>
+                      <goal>prepare-agent</goal>
+                      <goal>report</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.ops4j.pax.exam</groupId>
+                    <artifactId>maven-paxexam-plugin</artifactId>
+                    <versionRange>[1.2.4,)</versionRange>
+                    <goals>
+                      <goal>generate-depends-file</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.basepom.maven</groupId>
+                    <artifactId>
+                      duplicate-finder-maven-plugin
+                    </artifactId>
+                    <versionRange>[1.2.1,)</versionRange>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
+          <configuration>
+            <!-- Note: This exclusion list should match <sonar.exclusions>
+                       property above -->
+            <excludes>
+              <exclude>**/gen/**</exclude>
+              <exclude>**/generated-sources/**</exclude>
+              <exclude>**/generated-test-sources/**</exclude>
+              <exclude>**/yang-gen/**</exclude>
+              <exclude>**/yang-gen-config/**</exclude>
+              <exclude>**/yang-gen-sal/**</exclude>
+              <exclude>**/yang-gen-code/**</exclude>
+              <exclude>**/pax/**</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.ops4j.pax.exam</groupId>
+          <artifactId>maven-paxexam-plugin</artifactId>
+          <version>1.2.4</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jdepend-maven-plugin</artifactId>
+          <version>2.0</version>
+          <executions>
+            <execution>
+              <phase>site</phase>
+              <goals>
+                <goal>generate-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- When updating this version, consider antl4-runtime above -->
+        <plugin>
+          <groupId>org.antlr</groupId>
+          <artifactId>antlr4-maven-plugin</artifactId>
+          <version>4.7.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-banned-dependencies</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <bannedDependencies>
+                  <message>Please always use mockito-core instead of mockito-all, and findbugs:annotations instead of findbugs:jsr305 (see https://bugs.opendaylight.org/show_bug.cgi?id=7662 &amp; https://bugs.opendaylight.org/show_bug.cgi?id=7663)</message>
+                  <excludes>
+                    <exclude>org.mockito:mockito-all</exclude>
+                    <!-- https://github.com/facebook/facebook-oss-pom/blob/master/pom.xml#L331-L336 -->
+                    <!-- Clashes with com.google.code.findbugs:annotations and having both jars -->
+                    <!-- as a dependency then clashes with the dependency checker (because it   -->
+                    <!-- is not very good at handling annotations). Use the annotations jar     -->
+                    <!-- instead which has all jsr305 annotations and the additional findbugs   -->
+                    <!-- stuff. -->
+                    <exclude>com.google.code.findbugs:jsr305</exclude>
+                    <exclude>net.jcip:jcip-annotations</exclude>
+                  </excludes>
+                </bannedDependencies>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+          <execution>
+            <id>find-duplicate-classpath-entries</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+            <!-- https://github.com/basepom/duplicate-finder-maven-plugin/wiki -->
+            <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+            <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
+            <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+            <printEqualFiles>false</printEqualFiles>
+            <quiet>true</quiet>
+            <!-- In addition to https://github.com/basepom/duplicate-finder-maven-plugin/wiki/Default%20ignored%20elements,
+                 as explained on https://github.com/basepom/duplicate-finder-maven-plugin/wiki/Ignoring%20Dependencies%20and%20Resources,
+                 we use resources not dependencies (see https://github.com/basepom/duplicate-finder-maven-plugin/wiki/Classpath%20Exceptions)
+                 also ignore: -->
+            <ignoredResourcePatterns>
+              <ignoredResourcePattern>org/opendaylight/blueprint/.*\.xml$</ignoredResourcePattern>
+              <ignoredResourcePattern>OSGI-OPT/bnd.bnd$</ignoredResourcePattern>
+              <ignoredResourcePattern>WEB-INF/web.xml</ignoredResourcePattern>
+              <ignoredResourcePattern>README.*$</ignoredResourcePattern>
+              <ignoredResourcePattern>.*\.html$</ignoredResourcePattern>
+              <ignoredResourcePattern>reference.conf</ignoredResourcePattern>
+            </ignoredResourcePatterns>
+            <ignoredDependencies>
+              <ignoredDependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+              </ignoredDependency>
+              <ignoredDependency>
+                <groupId>org.opendaylight.odlparent</groupId>
+                <artifactId>opendaylight-karaf-empty</artifactId>
+              </ignoredDependency>
+            </ignoredDependencies>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+
+      <!-- Jacoco / Sonar -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>pre-unit-test</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${sonar.jacoco.reportPath}</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-unit-test</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${sonar.jacoco.reportPath}</dataFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.alexecollins.maven.plugin</groupId>
+        <artifactId>script-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+           <execution>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>execute</goal>
+             </goals>
+             <configuration>
+               <script>
+                 // BeanShell is 2005-ish and thus doesn't support generics, varargs, try-with-resources or lambdas, so:
+                 // (If we do this kind of inline code in pom.xml more often, we shold have a new simple module in
+                 //  odl-parent, which has *.java that we compile, and then just depend on it here and call one-line
+                 //  static class methods only - it will be MUCH easier to write!)
+                 void copy(File root, String glob, File target) {
+                     java.nio.file.DirectoryStream dirStream = java.nio.file.Files.newDirectoryStream(root.toPath(), glob);
+                     Iterator dirStreamIterator = dirStream.iterator();
+                     while (dirStreamIterator.hasNext()) {
+                         java.nio.file.Path path = dirStreamIterator.next();
+                         java.nio.file.Files.copy(path, new File(target, path.toFile().getName()).toPath(),
+                             new java.nio.file.CopyOption[] {
+                                 java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                                 java.nio.file.StandardCopyOption.COPY_ATTRIBUTES
+                             }
+                         );
+                     }
+                     dirStream.close();
+                 }
+
+                 File gitRepoRootDir = project.basedir;
+                 while (!new File(gitRepoRootDir, ".git").exists() &amp;&amp; gitRepoRootDir.getParentFile() != null) {
+                     gitRepoRootDir = gitRepoRootDir.getParentFile();
+                 }
+
+                 File target = new File(project.build.outputDirectory);
+                 target.mkdirs();
+                 copy(gitRepoRootDir, "README*", target);
+                 copy(gitRepoRootDir, "CONTRIBUTING*", target);
+                 copy(gitRepoRootDir, "PROJECT_INFO.yaml", target);
+               </script>
+             </configuration>
+           </execution>
+         </executions>
+         <dependencies>
+           <dependency>
+             <groupId>org.apache-extras.beanshell</groupId>
+             <artifactId>bsh</artifactId>
+             <version>2.0b6</version>
+           </dependency>
+         </dependencies>
+      </plugin>
+
+      <!-- Blueprint dependency injection -->
+      <!-- Remove when upgrading to plugin 1.5.0, and use
+           <configuration><generatedDir>org/opendaylight/blueprint/</...></...>
+           See https://issues.apache.org/jira/browse/ARIES-1597
+           BUT beware that the directory is now conditional... -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <!-- This should only run once, in the process-classes phase; but we need it to run after
+               process-classes in child projects. Attaching to process-test-classes and prepare-package
+               ensures that the file will be moved whether tests are skipped or not. -->
+          <execution>
+            <id>move-autowire-test</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+                <if>
+                  <available file="${project.basedir}/src/main/resources/org/opendaylight/blueprint" type="dir"/>
+                  <then>
+                    <echo>Moving autowire.xml to org/opendaylight/blueprint</echo>
+                    <move file="${project.build.directory}/generated-resources/OSGI-INF/blueprint/autowire.xml"
+                          todir="${project.build.directory}/generated-resources/org/opendaylight/blueprint"
+                          failonerror="false" quiet="true" />
+                  </then>
+                  <else>
+                    <echo>NOT moving autowire.xml (to org/opendaylight/blueprint)</echo>
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>move-autowire-package</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+                <if>
+                  <available file="${project.basedir}/src/main/resources/org/opendaylight/blueprint" type="dir"/>
+                  <then>
+                    <echo>Moving autowire.xml to org/opendaylight/blueprint</echo>
+                    <move file="${project.build.directory}/generated-resources/OSGI-INF/blueprint/autowire.xml"
+                          todir="${project.build.directory}/generated-resources/org/opendaylight/blueprint"
+                          failonerror="false" quiet="true" />
+                  </then>
+                  <else>
+                    <echo>NOT moving autowire.xml (to org/opendaylight/blueprint)</echo>
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>ant-contrib</groupId>
+            <artifactId>ant-contrib</artifactId>
+            <version>1.0b3</version>
+            <exclusions>
+              <exclusion>
+                <groupId>ant</groupId>
+                <artifactId>ant</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-nodeps</artifactId>
+            <version>1.8.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${checkstyle.version}</version>
+      </plugin>
+
+      <!-- FIXME: activate this
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>${projectinfo}</version>
+      </plugin-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jdepend-maven-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>generate-no-fork</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <profiles>
+    <profile>
+      <!-- On JDK9-and-later findbugs fails -->
+      <id>jdk9-findbugs</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <properties>
+        <findbugs.skip>true</findbugs.skip>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- On JDK10-and-later spotbugs fails -->
+      <id>jdk10-spotbugs</id>
+      <activation>
+        <jdk>[10,)</jdk>
+      </activation>
+
+      <properties>
+        <spotbugs.skip>true</spotbugs.skip>
+      </properties>
+    </profile>
+  </profiles>
+</project>
+

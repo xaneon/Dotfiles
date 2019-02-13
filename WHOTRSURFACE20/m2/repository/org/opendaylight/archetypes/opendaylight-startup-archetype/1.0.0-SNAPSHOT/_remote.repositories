@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Jan 30 10:44:36 CET 2019
+opendaylight-startup-archetype-1.0.0-20190129.170243-27.jar>opendaylight-snapshot=
+opendaylight-startup-archetype-1.0.0-20190129.170243-27.pom>opendaylight-snapshot=

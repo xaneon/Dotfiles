@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>org.opendaylight.archetypes</groupId>
+  <artifactId>archetypes-aggregator</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20190129.170243</timestamp>
+      <buildNumber>27</buildNumber>
+    </snapshot>
+    <lastUpdated>20190129170243</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.0.0-20190129.170243-27</value>
+        <updated>20190129170243</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
